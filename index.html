@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Proof Pirate</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+  <!-- Info Button (Üst sağda, saydam ve sabit) -->
+  <button id="infoButton" style="
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: transparent;
+    border: none;
+    font-size: 28px;
+    color: white;
+    cursor: pointer;
+    z-index: 10000;
+  ">ⓘ</button>
+
+  <!-- Info Modal Kutusu -->
+  <div id="infoModal" style="
+    display: none;
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.75);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 10001;  /* <-- Yükseltilmiş */
+  ">
+    <div style="
+      background: #f0f8ff;
+      padding: 30px 40px;
+      border-radius: 12px;
+      max-width: 600px;
+      text-align: left;
+      font-family: 'Orbitron', sans-serif;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+      color: #333;
+      position: relative;
+    ">
+      <h2 style="color: #e91e63; margin-bottom: 12px;">Legal Notice</h2>
+      <p style="font-size: 15px; line-height: 1.6;">
+        
+This game is a fan-made, non-commercial project created solely for entertainment purposes. It is not affiliated with or endorsed by any project, including Succinct.
+
+The crab and bird mascots, as well as certain hat designs featured in the game, are inspired by the Succinct project and its community. These visuals are used with admiration and creative interpretation.
+
+All logos, names, and characters remain the property of their respective owners.  
+If you are a rights holder and wish to request removal of any content, please contact us — we will promptly take the necessary action.
+
+      </p>
+      <button onclick="document.getElementById('infoModal').style.display = 'none'" style="
+        margin-top: 20px;
+        padding: 10px 20px;
+        font-weight: bold;
+        background-color: #007acc;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+      ">Close</button>
+    </div>
+  </div>
+
+  <div class="game-container">
+    <canvas id="gameCanvas" width="900" height="2000"></canvas>
+    <div id="popup-container" style="
+        position: absolute;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        pointer-events: none;
+        overflow: visible;
+      "></div>
+
+    <div class="ui">
+      <div id="proofCountDisplay" class="stat-item"><strong>Proof:</strong> 0</div>
+      <div id="scoreDisplay" class="stat-item"><strong>Score:</strong> 0</div>
+      <div id="levelDisplay" class="stat-item"><strong>Proof Grade:</strong> 0×</div>
+      <div id="timerDisplay" class="stat-item"><strong>Time:</strong> 120</div>
+      <div id="hookCountDisplay" class="stat-item"><strong>Hooks Left:</strong> 30</div>
+      <!-- Restart butonu -->
+      <button id="restartButton" onclick="restartGame()" style="margin-top: 15px; padding: 8px 14px; font-weight: bold; cursor: pointer;">
+        Restart
+      </button>
+    </div>
+  </div>
+
+  <!-- Başlangıç ekranı -->
+  <div id="startScreen" style="
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.75);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 9999;  /* <-- Start Screen z-index'i sabit */
+    ">
+    <div style="
+        background: #f0f8ff;
+        padding: 40px 60px;
+        border-radius: 12px;
+        text-align: center;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+        max-width: 400px;
+    ">
+      <h1 style="font-family: 'Orbitron', sans-serif; margin-bottom: 20px; color: #e91e63;">
+        PROOF PIRATE
+      </h1>
+      <p style="font-size: 16px; margin-bottom: 30px; color: #333;">
+        Your mission: catch the right items, avoid the junk, and deliver proof!<br><br>
+        You have <strong>30 hooks</strong> and <strong>120 seconds</strong> to earn the highest score.<br>
+        Press <strong>Start Game</strong> to begin, and hit the <strong>Spacebar</strong> to fire your hook.<br><br>
+        Timing is everything. Make every catch count!
+
+(This is a fan-made non-commercial game.)
+      </p>
+      <button id="startButton" style="
+          background-color: #007acc;
+          color: white;
+          border: none;
+          padding: 12px 28px;
+          font-size: 18px;
+          border-radius: 8px;
+          cursor: pointer;
+          font-weight: bold;
+          transition: background-color 0.3s ease;
+      ">Start Game</button>
+    </div>
+  </div>
+
+  <div id="gameOver" class="overlay">
+    <div class="game-over-box">
+      <h2 id="endMessage">🎉 Proof Delivered! 🎉</h2>
+      <p id="finalScore">
+        <span class="score-label">Score: <span class="final-score-value">0</span></span><br>
+        <span class="proof-label">Proof Grade: <span class="final-proof-value">0×</span></span><br>
+        <span class="final-label">Final Score = <span class="final-final-value">0 × 0 = 0</span></span>
+      </p>
+      <button onclick="restartGame()">Restart</button>
+    </div>
+  </div>
+
+  <script src="game.js"></script>
+  <script>
+    // Start button tıklama işlemi
+    document.getElementById('startButton').addEventListener('click', () => {
+      document.getElementById('startScreen').style.display = 'none';
+      startGame();
+    });
+    // Info butonuna tıklayınca modal kutusunu göster
+    document.getElementById('infoButton').addEventListener('click', function () {
+      document.getElementById('infoModal').style.display = 'flex';
+    });
+  </script>
+</body>
+</html>
