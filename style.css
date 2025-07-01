@@ -20,11 +20,17 @@ body {
   box-shadow: 0 0 20px rgba(255, 105, 180, 0.4);
 }
 
+#popup-container {
+  width: 100% !important;
+  height: auto !important;
+  max-width: 100%;
+  max-height: 100%;
+}
 canvas {
-  background: #e0f7fa;
-  border: 6px solid #ff79a7;
-  box-shadow: 0 0 20px rgba(255, 121, 167, 0.5);
-  display: block;
+  width: 100% !important;
+  height: auto !important;
+  max-width: 100%;
+  max-height: 100vh;
 }
 
 .ui {
@@ -81,6 +87,59 @@ button, .game-over-box button, #restartButton {
   cursor: pointer;
   transition: all 0.2s ease;
   box-shadow: 0 4px 6px rgba(233, 30, 99, 0.4);
+}
+button, .game-over-box button, #restartButton {
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+@media (max-width: 768px) {
+  body {
+    flex-direction: column;
+    padding: 10px;
+    align-items: stretch;
+    height: auto;
+  }
+
+  .game-container {
+    flex-direction: column;
+    width: 100%;
+    gap: 10px;
+    padding: 10px;
+  }
+
+  .ui {
+    width: 100%;
+    font-size: 16px;
+    padding: 15px;
+    box-sizing: border-box;
+    min-width: unset;
+  }
+
+  .game-over-box {
+    width: 90%;
+    padding: 20px;
+  }
+
+  #finalScore {
+    font-size: 16px;
+    padding: 15px;
+  }
+
+  h1, h2 {
+    font-size: 20px !important;
+  }
+
+  button {
+    width: 100%;
+    font-size: 16px;
+    padding: 12px;
+  }
+
+  canvas {
+    width: 100% !important;
+    height: auto !important;
+  }
 }
 
 button:hover, .game-over-box button:hover, #restartButton:hover {
