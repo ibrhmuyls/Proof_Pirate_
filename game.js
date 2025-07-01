@@ -910,30 +910,46 @@ timerInterval = setInterval(() => {
 }
 
 window.addEventListener("keydown", (e) => {
-  if (!gameStarted) return;  // Oyun başlamadıysa boşluk tuşuna basılınca işlemi iptal et
-
   if (e.code === "Space") {
-    if (hook.swinging && hookCount > 0) {
-      hook.swinging = false;
-      hook.dropping = true;
-
-      const dx = hook.x - hook.originX;
-      const dy = hook.y - hook.originY;
-      const dist = Math.sqrt(dx * dx + dy * dy);
-      hook.dx = dx / dist;
-      hook.dy = dy / dist;
-
-      hookCount--;
-    }
+    handleDropAction();
   }
 });
 
+
+function handleDropAction() {
+  if (!gameStarted) return;
+
+  if (hook.swinging && hookCount > 0) {
+    hook.swinging = false;
+    hook.dropping = true;
+
+    const dx = hook.x - hook.originX;
+    const dy = hook.y - hook.originY;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    hook.dx = dx / dist;
+    hook.dy = dy / dist;
+
+    hookCount--;
+  }
+}
 window.onload = () => {
-  // Başlangıç ekranı görünür olsun (HTML'de zaten flex olarak bırakabiliriz)
+  // Başlangıç ekranı görünsün
   document.getElementById("startScreen").style.display = "flex";
-drawBackground();
+  drawBackground();
+
   const startBtn = document.getElementById("startButton");
   startBtn.addEventListener("click", () => {
+    // Oyun başlatıldığında canvas'a tıklama ve dokunma olaylarını tanımla
+    canvas.addEventListener("click", () => {
+      handleDropAction();
+    });
+
+    canvas.addEventListener("touchstart", (e) => {
+      e.preventDefault(); // Mobilde kaydırmayı engelle
+      handleDropAction();
+    }, { passive: false });
+
+    // Başlangıç ekranını gizle ve oyunu başlat
     document.getElementById("startScreen").style.display = "none";
     startGame();
   });
