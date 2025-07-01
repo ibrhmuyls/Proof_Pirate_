@@ -149,7 +149,13 @@ button:hover, .game-over-box button:hover, #restartButton:hover {
 button:active, .game-over-box button:active, #restartButton:active {
   transform: scale(0.97);
 }
-
+@media (max-width: 768px) {
+  #infoButton {
+    top: auto !important;
+    bottom: 20px;
+    right: 20px;
+  }
+}
 #gameOver.overlay {
   position: fixed;
   top: 0;
